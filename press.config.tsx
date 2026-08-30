@@ -26,6 +26,9 @@ export default defineConfig({
     nav: {
       title: "Remux Wiki",
     },
+    themeSwitch: {
+      mode: "light-dark-system",
+    },
   },
 })
   .adapters(fumadocsMdx())
