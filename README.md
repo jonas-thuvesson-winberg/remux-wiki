@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-The site is available at `http://localhost:3000`.
+The site is available at `http://localhost:1337`.
 
 ## Checks
 
