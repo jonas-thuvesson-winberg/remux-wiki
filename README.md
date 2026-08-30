@@ -22,3 +22,9 @@ npm run build
 ```
 
 Wiki pages live in `content/docs`.
+
+## Deployment
+
+Push the project to the `main` or `master` branch on GitHub. The included GitHub Actions workflow builds the static site and publishes `dist/public` to `https://<owner>.github.io/<repository>/`.
+
+In the repository settings, select **GitHub Actions** under **Settings → Pages → Build and deployment → Source**. No custom domain or DNS configuration is required.

@@ -30,14 +30,19 @@ const docs = defineDocs({
   },
 });
 
+const basePath = process.env.BASE_PATH ?? "/";
+
 export default defineConfig({
+  mode: "static",
   content: docs.toFumadocsSource(),
   loaderOptions: {
     plugins: [lucideIconsPlugin()],
   },
   site: {
     name: "Remux Wiki",
-    baseUrl: import.meta.env.DEV ? "http://localhost:3000" : "https://remux.wiki",
+    baseUrl: import.meta.env.DEV
+      ? "http://localhost:3000"
+      : (process.env.SITE_URL ?? "http://localhost:3000"),
   },
   defaultLayoutProps: {
     githubUrl: "https://github.com/lostb1t/remux",
@@ -63,7 +68,7 @@ export default defineConfig({
       title: (
         <>
           <Image
-            src="/logo.png"
+            src={`${basePath}logo.png`}
             width={1024}
             height={1024}
             className="size-8 rounded-lg"
