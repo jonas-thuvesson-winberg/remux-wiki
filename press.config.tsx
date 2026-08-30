@@ -1,9 +1,10 @@
 import { lucideIconsPlugin } from "fumadocs-core/source/plugins/lucide-icons";
 import { defineDocs } from "fumadocs-mdx/macro";
-import { defineConfig } from "fumapress";
+import { defineConfig, type PressPlugin } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
 import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
+import { StraightToc } from "./src/straight-toc";
 
 function DiscordIcon() {
   return (
@@ -32,6 +33,22 @@ const docs = defineDocs({
 
 const basePath = process.env.BASE_PATH ?? "/";
 
+const straightTocPlugin = {
+  name: "straight-toc",
+  configure() {
+    const layout = (this.data["core:docs-layout"] ??= {});
+    (layout.pageInterceptors ??= []).push(({ props, next }) =>
+      next({
+        ...props,
+        tableOfContent: {
+          ...props.tableOfContent,
+          component: <StraightToc />,
+        },
+      }),
+    );
+  },
+} satisfies PressPlugin<any>;
+
 export default defineConfig({
   mode: "static",
   content: docs.toFumadocsSource(),
@@ -44,7 +61,7 @@ export default defineConfig({
   site: {
     name: "Remux Wiki",
     baseUrl: import.meta.env.DEV
-      ? "http://localhost:3000"
+      ? "http://localhost:1337"
       : (process.env.SITE_URL ?? "http://localhost:3000"),
   },
   defaultLayoutProps: {
@@ -86,4 +103,4 @@ export default defineConfig({
   },
 })
   .adapters(fumadocsMdx())
-  .plugins(llmsPlugin({ routes: "all" }));
+  .plugins(straightTocPlugin, llmsPlugin({ routes: "all" }));
