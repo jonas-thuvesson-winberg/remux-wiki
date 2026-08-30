@@ -1,0 +1,158 @@
+# Remux Setup Guide
+
+## Prerequisites
+
+Remux is packaged as a Docker container. If you haven't already, [install Docker](https://docs.docker.com/) on your server.
+
+---
+
+## Step 1: Create the Docker Compose File
+
+Create a `docker-compose.yml` file with the following configuration:
+
+```yaml
+services:
+  remux:
+    image: ghcr.io/lostb1t/remux:nightly
+    ports:
+      - "3000:3000"                    # Change the left port if 3000 is already in use
+    environment:
+      - PUID=1000                       # Replace with your user ID (run 'id -u' to check)
+      - PGID=1000                       # Replace with your group ID (run 'id -g' to check)
+    volumes:
+      - ./remux/data:/data
+    devices:
+      - /dev/dri:/dev/dri               # Required for hardware acceleration/transcoding
+    group_add:
+      - "105"                           # Replace with your render group (run 'getent group render')
+    security_opt:
+      - seccomp:unconfined
+    restart: unless-stopped
+```
+
+### Configuration Notes
+
+| Setting | Purpose |
+|---------|---------|
+| `image: nightly` | Remux is actively developed; use `:latest` for stability instead |
+| `PUID / PGID` | Ensures correct file permissions; run `id -u` and `id -g` to get your values |
+| `/dev/dri` | Enables GPU hardware acceleration for transcoding |
+| `group_add: "105"` | GPU access group; run `getent group render` to verify the correct group ID |
+
+---
+
+## Step 2: Start the Container
+
+Pull the container image and start the service:
+
+```bash
+docker compose up -d
+```
+
+The Remux dashboard will be accessible at `http://localhost:3000` (or your custom port).
+
+---
+
+## Step 3: Initial Setup Wizard
+
+### 1. Set Your Server Name
+Enter a name for your Remux instance. This identifies your server.
+
+![Server Name Setup](https://github.com/user-attachments/assets/c76d3120-de78-4f57-a5cb-b0be2347d2a8)
+
+### 2. Create Your Admin Account
+Set up your admin credentials for dashboard access.
+
+![Create Admin Account](https://github.com/user-attachments/assets/ab0d2e4a-8523-4d1a-87a2-5855d871edaf)
+
+### 3. Click Finish
+You'll be redirected to the main dashboard.
+
+---
+
+## Step 4: Connect AIOStreams Addon
+
+### Add the Addon
+
+1. From the left sidebar, click **Addons**
+
+![Addons Panel](https://github.com/user-attachments/assets/ef608825-eb25-46f1-bfd0-f9e91b764d1f)
+
+2. Click **New Addon**
+
+![New Addon Button](https://github.com/user-attachments/assets/65effeca-2963-4e31-b3dd-21a412b4ef40)
+
+3. Select **Stremio Addon** and click **Configure**
+
+![Stremio Addon Selection](https://github.com/user-attachments/assets/47df69ef-1030-4849-bb95-45511d2ca979)
+
+### Configure AIOStreams
+
+1. **Name:** Change to `AIOStreams` (or your preferred name)
+2. **Manifest URL:** Paste your AIOStreams `manifest.json` URL
+   - Example: `https://aiostreams.elfhosted.com/manifest.json`
+3. Click **Create**
+
+![AIOStreams Configuration](https://github.com/user-attachments/assets/8b0a39c1-d753-416a-9d61-20af837072f9)
+
+The addon will now appear in your addons list.
+
+---
+
+## Step 5: Test Playback
+
+1. Click **Jellyfin Web** in the bottom of the left sidebar
+   - This launches the bundled web player
+
+![Jellyfin Web Button](https://github.com/user-attachments/assets/16f290c6-9257-42fe-8bc0-bb71d8206df1)
+
+2. Click the **search icon** in the top-right corner
+3. Search for content (movie, TV show, etc.)
+4. Attempt playback
+
+You should see search results from AIOStreams and playback should work.
+
+✅ **Congratulations!** Your Remux setup is complete.
+
+---
+
+## Troubleshooting
+
+### "Can't access the dashboard"
+- Verify the container is running: `docker ps | grep remux`
+- Check port mappings: `docker port remux`
+- Ensure your firewall allows access to port 3000
+
+### "No playback available"
+- Verify AIOStreams is properly configured and your Debrid token is valid
+- Check Remux logs: `docker logs remux`
+
+### "Hardware acceleration not working"
+- Verify your GPU group ID is correct: `getent group render`
+- Check that `/dev/dri` is accessible to the container
+
+---
+
+## Useful Commands
+
+```bash
+# View logs
+docker logs remux
+
+# Restart the container
+docker compose restart remux
+
+# Stop the container
+docker compose down
+
+# Update to latest version
+docker compose pull && docker compose up -d
+```
+
+---
+
+## Need Help?
+
+- 📖 **Remux Docs:** Check the official Remux repository
+- 🐛 **Report Issues:** GitHub issues page
+- 💬 **Community:** Stremio and Remux Discord communities
