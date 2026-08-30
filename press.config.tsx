@@ -2,6 +2,7 @@ import { lucideIconsPlugin } from "fumadocs-core/source/plugins/lucide-icons";
 import { defineDocs } from "fumadocs-mdx/macro";
 import { defineConfig } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
+import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
 
 const docs = defineDocs({
@@ -24,7 +25,17 @@ export default defineConfig({
   },
   defaultLayoutProps: {
     nav: {
-      title: "Remux Wiki",
+      title: (
+        <>
+          <Image
+            src="/logo.png"
+            width={1024}
+            height={1024}
+            className="size-8 rounded-lg"
+          />
+          <span>Remux Wiki</span>
+        </>
+      ),
     },
     themeSwitch: {
       mode: "light-dark-system",
