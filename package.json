@@ -4,7 +4,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "dev": "fumapress dev",
+    "dev": "fumapress dev --port 1337",
     "build": "fumapress build",
     "start": "fumapress start",
     "types:check": "tsc --noEmit",
