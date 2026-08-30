@@ -4,7 +4,7 @@ The Remux documentation site, built with [Fumapress](https://press.fumadocs.dev/
 
 ## Development
 
-Requires Node.js 22 or newer.
+Requires Node.js 24 or newer.
 
 ```bash
 npm install
