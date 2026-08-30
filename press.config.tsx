@@ -4,7 +4,7 @@ import { defineConfig, type PressPlugin } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
 import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
-import { StraightToc } from "./src/straight-toc";
+import { StraightToc, StraightTocMobile } from "./src/straight-toc";
 
 function DiscordIcon() {
   return (
@@ -43,6 +43,10 @@ const straightTocPlugin = {
         tableOfContent: {
           ...props.tableOfContent,
           component: <StraightToc />,
+        },
+        tableOfContentPopover: {
+          ...props.tableOfContentPopover,
+          component: <StraightTocMobile />,
         },
       }),
     );
