@@ -35,6 +35,9 @@ const basePath = process.env.BASE_PATH ?? "/";
 export default defineConfig({
   mode: "static",
   content: docs.toFumadocsSource(),
+  meta: {
+    root: () => <link rel="icon" href={`${basePath}favicon.ico`} />,
+  },
   loaderOptions: {
     plugins: [lucideIconsPlugin()],
   },
