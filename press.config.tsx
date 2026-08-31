@@ -66,7 +66,7 @@ export default defineConfig({
     name: "Remux Wiki",
     baseUrl: import.meta.env.DEV
       ? "http://localhost:1337"
-      : (process.env.SITE_URL ?? "http://localhost:3000"),
+      : (process.env.SITE_URL ?? "http://localhost:1337"),
   },
   defaultLayoutProps: {
     githubUrl: "https://github.com/lostb1t/remux",
