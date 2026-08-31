@@ -4,6 +4,8 @@ import { defineConfig, type PressPlugin } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
 import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
+import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
 import { StraightToc, StraightTocMobile } from "./src/straight-toc";
 
 function DiscordIcon() {
@@ -106,5 +108,15 @@ export default defineConfig({
     },
   },
 })
-  .adapters(fumadocsMdx())
+  .adapters(
+    fumadocsMdx({
+      async getMdxComponents(page) {
+        return {
+          ...defaultMdxComponents,
+          a: createRelativeLink(await this.getLoader(), page),
+          img: (props) => <ImageZoom {...(props as any)} />,
+        };
+      },
+    }),
+  )
   .plugins(straightTocPlugin, llmsPlugin({ routes: "all" }));
