@@ -1,0 +1,91 @@
+---
+title: Caddy Setup Guide (Optional)
+description: Set up a reverse proxy and expose remux over the internet.
+icon: Shield
+---
+
+# Caddy setup guide (optional)
+
+This guide describes how you can use a reverse proxy and custom domain to expose remux to the internet (reachable by clients).
+
+<Cards>
+  <Card title="Skip to the remux setup guide" href="/remux-setup-guide" description="Install Remux and complete the initial setup." />
+</Cards>
+
+## Docker compose
+
+Create the caddy folder (in your desired root folder) and a shared Docker network for Caddy and Remux:
+
+```bash
+mkdir caddy
+cd caddy
+docker network create caddy-net
+mkdir -p conf data
+```
+
+Create a separate `docker-compose.yml` for Caddy:
+
+```yaml
+services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./conf:/etc/caddy:ro
+      - ./data:/data
+    networks:
+      - caddy-net
+    restart: unless-stopped
+
+networks:
+  caddy-net:
+    external: true
+```
+
+## Configure the firewall with UFW
+
+Allow the ports Caddy uses for HTTP, HTTPS, and HTTP/3:
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 443/udp
+```
+
+If UFW is not already enabled, allow SSH before enabling it so you do not lock yourself out of the server:
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw enable
+sudo ufw status
+```
+
+## DuckDNS (optional step)
+
+If you don't have a domain, you can use [DuckDNS](https://www.duckdns.org/):
+
+1. Sign in to DuckDNS and create a subdomain.
+2. Set the subdomain to your server's public IP address.
+3. If your public IP changes periodically, configure one of the update clients listed by DuckDNS.
+4. Confirm that the domain resolves to your public IP before starting Caddy.
+
+If the server is behind a router, forward TCP ports `80` and `443`, plus UDP port `443`, from the router to the server. You do not need to forward Remux port `3000`.
+
+## Caddyfile
+
+Create a file named `Caddyfile` inside the `conf` directory. Replace `remux.my-domain.duckdns.org` with the domain pointing to your server.
+
+```text
+remux.my-domain.duckdns.org {
+  reverse_proxy remux:3000
+}
+```
+
+Start Caddy:
+
+```bash
+docker compose up -d
+```

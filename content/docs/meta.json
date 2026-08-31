@@ -2,6 +2,7 @@
   "pages": [
     "index",
     "aiostreams-setup-guide",
+    "caddy-proxy-setup",
     "remux-setup-guide",
     "remux-paradigms"
   ]
