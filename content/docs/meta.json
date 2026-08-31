@@ -1,0 +1,8 @@
+{
+  "pages": [
+    "index",
+    "aiostreams-setup-guide",
+    "remux-setup-guide",
+    "remux-paradigms"
+  ]
+}
