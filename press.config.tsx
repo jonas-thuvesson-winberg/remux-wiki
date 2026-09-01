@@ -1,3 +1,5 @@
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { lucideIconsPlugin } from "fumadocs-core/source/plugins/lucide-icons";
 import { defineDocs } from "fumadocs-mdx/macro";
 import { defineConfig, type PressPlugin } from "fumapress";
@@ -7,7 +9,64 @@ import { llmsPlugin } from "fumapress/plugins/llms.txt";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { PageFooter } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
+import { PageLastUpdated } from "./src/page-last-updated";
 import { StraightToc, StraightTocMobile } from "./src/straight-toc";
+
+const execFileAsync = promisify(execFile);
+const githubAuthorCache = new Map<
+  string,
+  Promise<{ name: string; url?: string } | undefined>
+>();
+
+async function getLastGithubAuthor(filePath?: string) {
+  if (!filePath) return;
+
+  try {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["log", "-1", "--format=%H", "--", filePath],
+      { cwd: process.cwd() },
+    );
+    const sha = stdout.trim();
+    if (!sha) return;
+
+    const token = process.env.GITHUB_TOKEN;
+    const repository = process.env.GITHUB_REPOSITORY;
+    if (!token || !repository) return;
+
+    let request = githubAuthorCache.get(sha);
+    if (!request) {
+      request = fetch(`https://api.github.com/repos/${repository}/commits/${sha}`, {
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      })
+        .then(async (response) => {
+          if (!response.ok) return;
+
+          const commit = (await response.json()) as {
+            author?: { login?: string; html_url?: string } | null;
+          };
+          if (!commit.author?.login) return;
+
+          return {
+            name: `@${commit.author.login}`,
+            url:
+              commit.author.html_url ??
+              `https://github.com/${commit.author.login}`,
+          };
+        })
+        .catch(() => undefined);
+      githubAuthorCache.set(sha, request);
+    }
+
+    return await request;
+  } catch {
+    return;
+  }
+}
 
 function DiscordIcon() {
   return (
@@ -28,6 +87,7 @@ function KoFiIcon() {
 const docs = defineDocs({
   dir: "content/docs",
   docs: {
+    lastModified: true,
     postprocess: {
       includeProcessedMarkdown: true,
     },
@@ -65,6 +125,26 @@ const straightTocPlugin = {
         ),
       }),
     );
+    (layout.transformers ??= []).push(async ({ data, page }) => {
+      if (!data.lastModified) return data;
+
+      const author = await getLastGithubAuthor(page.absolutePath);
+
+      return {
+        ...data,
+        lastModified: null,
+        body: (
+          <>
+            {data.body}
+            <PageLastUpdated
+              timestamp={data.lastModified.getTime()}
+              author={author?.name}
+              authorUrl={author?.url}
+            />
+          </>
+        ),
+      };
+    });
   },
 } satisfies PressPlugin<any>;
 
