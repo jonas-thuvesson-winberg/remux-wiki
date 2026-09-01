@@ -25,8 +25,15 @@ export function PageLastUpdated({
         <time dateTime={date.toISOString()}>{formatted} UTC</time>
         {author && (
           <>
-            {" "}by{" "}
-            {authorUrl ? <a href={authorUrl}>{author}</a> : author}
+            {" "}
+            by{" "}
+            {authorUrl ? (
+              <a className="hover:underline hover:text-black" href={authorUrl}>
+                {author}
+              </a>
+            ) : (
+              author
+            )}
           </>
         )}
       </p>
