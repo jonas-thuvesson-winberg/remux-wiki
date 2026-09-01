@@ -5,6 +5,7 @@ import { fumadocsMdx } from "fumapress/adapters/mdx";
 import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import { PageFooter } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
 import { StraightToc, StraightTocMobile } from "./src/straight-toc";
 
@@ -50,6 +51,18 @@ const straightTocPlugin = {
           ...props.tableOfContentPopover,
           component: <StraightTocMobile />,
         },
+      }),
+    );
+    (layout.bodyInterceptors ??= []).push(({ props, next }) =>
+      next({
+        ...props,
+        children: (
+          <>
+            // Adds back/forward navigation to the top of the page as well
+            <PageFooter className="not-prose mb-8" />
+            {props.children}
+          </>
+        ),
       }),
     );
   },
