@@ -53,12 +53,12 @@ const straightTocPlugin = {
         },
       }),
     );
+    // Adds back/forward navigation to the top of the page as well
     (layout.bodyInterceptors ??= []).push(({ props, next }) =>
       next({
         ...props,
         children: (
           <>
-            // Adds back/forward navigation to the top of the page as well
             <PageFooter className="not-prose mb-8" />
             {props.children}
           </>
