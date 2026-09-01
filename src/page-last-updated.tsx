@@ -29,7 +29,7 @@ export function PageLastUpdated({
             by{" "}
             {authorUrl ? (
               <a
-                className="hover:underline hover:text-black"
+                className="hover:underline hover:text-black dark:hover:text-white"
                 href={authorUrl}
                 target="_blank"
               >
