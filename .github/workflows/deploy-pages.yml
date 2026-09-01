@@ -41,6 +41,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
 
+      - name: Place social preview images at the Pages root
+        run: cp "dist/public/${{ github.event.repository.name }}"/*.webp dist/public/
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
 

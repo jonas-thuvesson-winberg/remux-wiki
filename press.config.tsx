@@ -6,6 +6,7 @@ import { defineConfig, type PressPlugin } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
 import { Image } from "fumapress/image";
 import { llmsPlugin } from "fumapress/plugins/llms.txt";
+import { takumiPlugin } from "fumapress/plugins/takumi";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { PageFooter } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
@@ -212,4 +213,8 @@ export default defineConfig({
       },
     }),
   )
-  .plugins(straightTocPlugin, llmsPlugin({ routes: "all" }));
+  .plugins(
+    straightTocPlugin,
+    llmsPlugin({ routes: "all" }),
+    takumiPlugin({ basePath }),
+  );
