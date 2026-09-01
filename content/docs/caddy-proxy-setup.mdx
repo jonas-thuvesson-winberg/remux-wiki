@@ -8,9 +8,7 @@ This guide describes how you can use a reverse proxy and custom domain to expose
 
 Check out [caddy](https://caddyserver.com/) and [caddy as a reverse proxy](https://caddyserver.com/docs/caddyfile/patterns#reverse-proxy) for more info.
 
-<Cards>
-  <Card title="Skip to the remux setup guide" href="/remux-setup-guide" description="Install Remux and complete the initial setup." />
-</Cards>
+This guide can be skipped if you don't want remux behind a domain with HTTPS (less secure).
 
 ---
 
@@ -92,8 +90,12 @@ remux.my-domain.duckdns.org {
 }
 ```
 
+Caddy will still obtain and renew the certificate, enable HTTPS, and redirect HTTP to HTTPS automatically.
+
 Start Caddy:
 
 ```bash
 docker compose up -d
 ```
+
+Remux (once set up in the next step) will now be served over HTTPS (encrypted and secure).
