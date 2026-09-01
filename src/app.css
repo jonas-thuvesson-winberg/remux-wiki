@@ -13,3 +13,9 @@
     scroll-behavior: smooth;
   }
 }
+
+/* Center Markdown images wrapped by ImageZoom. */
+.prose p > [data-rmiz] {
+  width: fit-content;
+  margin-inline: auto;
+}
