@@ -6,6 +6,14 @@ icon: House
 
 # Welcome to the Remux Wiki
 
+<div className="text-center">
+  <img src="/logo.png" alt="Remux logo" className="mx-auto size-[200px]" />
+</div>
+
+Remux is a Jellyfin-compatible media server that brings Stremio add-ons, local files, and WebDAV sources together under one roof. Music streams from its own dedicated pipeline with support for remote sources. Use any Jellyfin client to browse, search, and play without any client changes. Written in Rust.
+
+---
+
 Find everything you need to install Remux, understand its core concepts, and connect supported addons.
 
 <Cards>
@@ -14,3 +22,39 @@ Find everything you need to install Remux, understand its core concepts, and con
   <Card title="Remux setup guide" href="/remux-setup-guide" description="Install Remux and complete the initial setup." />
   <Card title="Core concepts" href="/remux-paradigms" description="Learn how addons, tasks, content, IPTV, and streaming fit together." />
 </Cards>
+
+---
+
+## Features
+
+- **Works with your Jellyfin clients**  
+  Infuse, Swiftfin, Jellyfin for Android, and any other Jellyfin-compatible client works without changes.
+
+- **Multiple content sources**  
+  Stream from Stremio add-ons, local files, WebDAV servers, or torrents. Mix and match across a single library.
+
+- **Built-in torrent streaming**  
+  Stream directly from torrents without a separate client. No downloads required.
+
+- **Independent music pipeline**  
+  Music is not tied to Stremio and streams from its own sources, including remote ones.
+
+- **Probe data for streams**  
+  Audio and subtitle track selection works out of the box for streamed content. Track metadata is sourced from [RemuxDB](https://remuxdb.1632022.xyz) so clients see the same experience as local files.
+
+- **Powerful library filtering**  
+  Build libraries dynamically: filter by tags, catalogs, popularity, release year, and more. Exclude content per-user or scope libraries to specific audiences without duplicating sources.
+
+- **Playback tracking**  
+  Progress syncs across clients with continue watching support.
+
+- **User management**  
+  Import users and data from an existing Jellyfin server to get started quickly.
+
+- **Desktop app**  
+  Single install, no Docker or terminal required. The server runs in the background as a tray app.
+
+- **Custom dashboard**  
+  A built-in admin interface designed for this workflow.
+
+- **IPTV Support**
