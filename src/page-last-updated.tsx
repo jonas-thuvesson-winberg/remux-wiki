@@ -20,7 +20,6 @@ export function PageLastUpdated({
 
   return (
     <>
-      <hr />
       <p className="text-sm text-fd-muted-foreground">
         Last updated on{" "}
         <time dateTime={date.toISOString()}>{formatted} UTC</time>

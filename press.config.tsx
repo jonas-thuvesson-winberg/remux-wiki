@@ -10,7 +10,7 @@ import { takumiPlugin } from "fumapress/plugins/takumi";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { PageFooter } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
-import { PageLastUpdated } from "./src/page-last-updated";
+import { DocsPageFooter } from "./src/docs-page-footer";
 import { StraightToc, StraightTocMobile } from "./src/straight-toc";
 
 const execFileAsync = promisify(execFile);
@@ -130,20 +130,24 @@ const straightTocPlugin = {
       if (!data.lastModified) return data;
 
       const author = await getLastGithubAuthor(page.absolutePath);
+      const timestamp = data.lastModified.getTime();
 
       return {
         ...data,
         lastModified: null,
-        body: (
-          <>
-            {data.body}
-            <PageLastUpdated
-              timestamp={data.lastModified.getTime()}
-              author={author?.name}
-              authorUrl={author?.url}
-            />
-          </>
-        ),
+        pageProps: {
+          ...data.pageProps,
+          slots: {
+            ...data.pageProps?.slots,
+            footer: DocsPageFooter,
+          },
+          footer: {
+            ...data.pageProps?.footer,
+            "data-last-updated": timestamp,
+            "data-last-author": author?.name,
+            "data-last-author-url": author?.url,
+          },
+        },
       };
     });
   },
