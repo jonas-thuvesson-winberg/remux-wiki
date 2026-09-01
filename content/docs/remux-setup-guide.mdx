@@ -4,15 +4,13 @@ description: Install Remux with Docker and complete the initial setup.
 icon: TvMinimalPlay
 ---
 
-# Remux Setup Guide
-
-## Prerequisites
+# Prerequisites
 
 Remux is packaged as a Docker container. If you haven't already, [install Docker](https://docs.docker.com/) on your server.
 
 ---
 
-## Step 1: Create the Docker Compose File
+# Step 1: Create the Docker Compose File
 
 First (from your desired root folder) create the directory for Remux:
 
@@ -23,7 +21,7 @@ cd remux
 
 Choose the configuration that matches how you want to access Remux.
 
-### Option A: With the Caddy reverse proxy
+## Option A: With the Caddy reverse proxy
 
 Use this configuration if you completed the Caddy setup guide. Remux is available to Caddy through the shared Docker network and port `3000` is not published on the host.
 
@@ -51,7 +49,7 @@ networks:
     external: true
 ```
 
-### Option B: Without the Caddy reverse proxy
+## Option B: Without the Caddy reverse proxy
 
 Use this configuration for direct access to Remux. It publishes Remux on port `3000` and does not require the external Caddy network.
 
@@ -75,7 +73,7 @@ services:
     restart: unless-stopped
 ```
 
-### Configuration Notes
+## Configuration Notes
 
 | Setting | Purpose |
 |---------|---------|
@@ -87,7 +85,7 @@ services:
 
 ---
 
-## Step 2: Start the Container
+# Step 2: Start the Container
 
 Pull the container image and start the service:
 
@@ -99,26 +97,26 @@ With Caddy, open the domain configured in your Caddyfile. Without Caddy, open `h
 
 ---
 
-## Step 3: Initial Setup Wizard
+# Step 3: Initial Setup Wizard
 
-### 1. Set Your Server Name
+## 1. Set Your Server Name
 Enter a name for your Remux instance. This identifies your server.
 
 ![Server Name Setup](/server-name-setup.png)
 
-### 2. Create Your Admin Account
+## 2. Create Your Admin Account
 Set up your admin credentials for dashboard access.
 
 ![Create Admin Account](/create-admin-account.png)
 
-### 3. Click Finish
+## 3. Click Finish
 You'll be redirected to the main dashboard.
 
 ---
 
-## Step 4: Connect AIOStreams Addon
+# Step 4: Connect AIOStreams Addon
 
-### Add the Addon
+## Add the Addon
 
 1. From the left sidebar, click **Addons**
 
@@ -132,7 +130,7 @@ You'll be redirected to the main dashboard.
 
 ![Stremio Addon Selection](/stremio-addon-selection.png)
 
-### Configure AIOStreams
+## Configure AIOStreams
 
 1. **Name:** Change to `AIOStreams` (or your preferred name)
 2. **Manifest URL:** Paste your AIOStreams `manifest.json` URL
@@ -145,7 +143,7 @@ The addon will now appear in your addons list.
 
 ---
 
-## Step 5: Test Playback
+# Step 5: Test Playback
 
 1. Click **Jellyfin Web** in the bottom of the left sidebar
    - This launches the bundled web player
@@ -162,25 +160,25 @@ You should see search results from AIOStreams and playback should work.
 
 ---
 
-## Troubleshooting
+# Troubleshooting
 
-### "Can't access the dashboard"
+## "Can't access the dashboard"
 - Verify the service is running: `docker compose ps`
 - Check the Remux logs: `docker compose logs remux`
 - Without Caddy, check the port mapping: `docker compose port remux 3000`
 - With Caddy, verify that both containers are connected to the shared network: `docker network inspect caddy-net`
 
-### "No playback available"
+## "No playback available"
 - Verify AIOStreams is properly configured and your Debrid token is valid
 - Check Remux logs: `docker compose logs remux`
 
-### "Hardware acceleration not working"
+## "Hardware acceleration not working"
 - Verify your GPU group ID is correct: `getent group render`
 - Check that `/dev/dri` is accessible to the container
 
 ---
 
-## Useful Commands
+# Useful Commands
 
 ```bash
 # View logs
@@ -198,7 +196,7 @@ docker compose pull && docker compose up -d
 
 ---
 
-## Need Help?
+# Need Help?
 
 - 📖 **Remux Docs:** Check the official Remux repository
 - 🐛 **Report Issues:** GitHub issues page
