@@ -12,13 +12,13 @@ This guide can be skipped if you don't want remux behind a domain with HTTPS (le
 
 ---
 
-# Prerequisites
+## Prerequisites
 
 Caddy is packaged as a Docker container. If you haven't already, [install Docker](https://docs.docker.com/) on your server.
 
 ---
 
-# Docker compose
+## Docker compose
 
 Create the caddy folder (in your desired root folder) and a shared Docker network for Caddy and Remux:
 
@@ -51,7 +51,7 @@ networks:
     external: true
 ```
 
-# Configure the firewall with UFW
+## Configure the firewall with UFW
 
 Allow the ports Caddy uses for HTTP, HTTPS, and HTTP/3:
 
@@ -69,7 +69,7 @@ sudo ufw enable
 sudo ufw status
 ```
 
-# DuckDNS (optional step)
+## DuckDNS (optional step)
 
 If you don't have a domain, you can use [DuckDNS](https://www.duckdns.org/):
 
@@ -80,7 +80,7 @@ If you don't have a domain, you can use [DuckDNS](https://www.duckdns.org/):
 
 If the server is behind a router, forward TCP ports `80` and `443`, plus UDP port `443`, from the router to the server. You do not need to forward Remux port `3000`.
 
-# Caddyfile
+## Caddyfile
 
 Create a file named `Caddyfile` inside the `conf` directory. Replace `remux.my-domain.duckdns.org` with the domain pointing to your server.
 
