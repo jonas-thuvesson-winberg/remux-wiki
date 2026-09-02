@@ -1,14 +1,14 @@
 ---
 title: Caddy Setup Guide (Optional)
-description: Set up a reverse proxy and expose remux over the internet.
+description: Set up a reverse proxy and expose Remux over the internet.
 icon: Globe
 ---
 
-This guide describes how you can use a reverse proxy and custom domain to expose remux to the internet (reachable by clients). Caddy automatically sets up an SSL certificate for you, so that traffic is protected.
+This guide describes how you can use a reverse proxy and custom domain to expose Remux to the internet (reachable by clients). Caddy automatically sets up an SSL certificate for you, so that traffic is protected.
 
-Check out [caddy](https://caddyserver.com/) and [caddy as a reverse proxy](https://caddyserver.com/docs/caddyfile/patterns#reverse-proxy) for more info.
+Check out [Caddy](https://caddyserver.com/) and [Caddy as a reverse proxy](https://caddyserver.com/docs/caddyfile/patterns#reverse-proxy) for more info.
 
-This guide can be skipped if you don't want remux behind a domain with HTTPS (less secure).
+This guide can be skipped if you don't want Remux behind a domain with HTTPS (less secure).
 
 ---
 
@@ -20,7 +20,7 @@ Caddy is packaged as a Docker container. If you haven't already, [install Docker
 
 ## Docker compose
 
-Create the caddy folder (in your desired root folder) and a shared Docker network for Caddy and Remux:
+Create the Caddy folder (in your desired root folder) and a shared Docker network for Caddy and Remux:
 
 ```bash
 mkdir caddy
