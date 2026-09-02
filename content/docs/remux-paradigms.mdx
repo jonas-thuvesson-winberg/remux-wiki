@@ -39,11 +39,13 @@ Select the addons that provide the functionality you'd like to add to Remux, the
 
 ## B. Tasks
 
-Once functionality has been added via Addons, the **Tasks** section is where those functions are enabled and run.
+Once functionality has been added via Addons, the **Tasks** section is where content or channels are populated (sourced) from the addons.
 
-**For example, after creating libraries or adding IPTV playlists, you must run the corresponding task for that content to appear. Tasks can also be scheduled to run automatically.**
+As an example, for addons that include movie or series content (for example through Stremio catalogs/lists), you have to run the "refresh library" task by hitting the play button.
 
-![Tasks overview](/tasks-overview.png)
+![Refresh library](/refresh-library.png)
+
+Tasks can be scheduled to run on an interval by clicking a task row:
 
 ![Task scheduling](/task-scheduling.png)
 
@@ -74,7 +76,7 @@ You can import lists from **AIOStreams**, **AIOMetadata**, or most Stremio-compa
 
 ### Media Kind & Collection Kind
 
-The **Media Kind** and **Collection Kind** determine what content is added to each collection.
+The **Media Kind** and **Collection Kind** determine what content is added to each collection. "Smart" is usually what you want for collection kind (for your overall library to be filtered based on a set of criterias).
 
 <table>
 <tr>
@@ -89,7 +91,15 @@ The **Media Kind** and **Collection Kind** determine what content is added to ea
 
 Media Filters let you further drill down the specific content shown in each collection, according to your preferences.
 
+<div className="w-lg mx-auto">
 ![Media filters](/media-filters.png)
+</div>
+
+As an example, if you want to a Stremio catalog to appear "the Stremio way", you can add the filter "catalog", and search for the name of the catalog. Also promote the collection to library:
+
+<div className="w-lg mx-auto">
+![Catalog to collection mapping](/catalog-to-collection.png)
+</div>
 
 ---
 
