@@ -22,7 +22,7 @@ Caddy is packaged as a Docker container. If you haven't already, [install Docker
 
 Create the Caddy folder (in your desired root folder) and a shared Docker network for Caddy and Remux:
 
-```bash
+```bash title="Terminal"
 mkdir caddy
 cd caddy
 docker network create caddy-net
@@ -31,7 +31,7 @@ mkdir -p conf data
 
 Create a separate `docker-compose.yml` for Caddy:
 
-```yaml
+```yaml title="docker-compose.yml" lineNumbers
 services:
   caddy:
     image: caddy:2-alpine
@@ -55,7 +55,7 @@ networks:
 
 Allow the ports Caddy uses for HTTP, HTTPS, and HTTP/3:
 
-```bash
+```bash title="Terminal"
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 443/udp
@@ -63,7 +63,7 @@ sudo ufw allow 443/udp
 
 If UFW is not already enabled, allow SSH before enabling it so you do not lock yourself out of the server:
 
-```bash
+```bash title="Terminal"
 sudo ufw allow OpenSSH
 sudo ufw enable
 sudo ufw status
@@ -84,7 +84,7 @@ If the server is behind a router, forward TCP ports `80` and `443`, plus UDP por
 
 Create a file named `Caddyfile` inside the `conf` directory. Replace `remux.my-domain.duckdns.org` with the domain pointing to your server.
 
-```text
+```caddyfile title="Caddyfile"
 remux.my-domain.duckdns.org {
   reverse_proxy remux:3000
 }
@@ -94,7 +94,7 @@ Caddy will still obtain and renew the certificate, enable HTTPS, and redirect HT
 
 Start Caddy:
 
-```bash
+```bash title="Terminal"
 docker compose up -d
 ```
 

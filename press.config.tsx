@@ -1,6 +1,8 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
 import { lucideIconsPlugin } from "fumadocs-core/source/plugins/lucide-icons";
+import { applyMdxPreset } from "fumadocs-mdx/config";
 import { defineDocs } from "fumadocs-mdx/macro";
 import { defineConfig, type PressPlugin } from "fumapress";
 import { fumadocsMdx } from "fumapress/adapters/mdx";
@@ -12,6 +14,7 @@ import { PageFooter } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
 import { DocsPageFooter } from "./src/docs-page-footer";
 import { StraightToc, StraightTocMobile } from "./src/straight-toc";
+import caddyfileGrammar from "./src/grammars/caddyfile";
 
 const execFileAsync = promisify(execFile);
 const githubAuthorCache = new Map<
@@ -89,6 +92,24 @@ const docs = defineDocs({
   dir: "content/docs",
   docs: {
     lastModified: true,
+    mdxOptions: applyMdxPreset({
+      rehypeCodeOptions: {
+        ...rehypeCodeDefaultOptions,
+        langs: [
+          {
+            ...caddyfileGrammar,
+            name: "caddyfile",
+            displayName: "Caddyfile",
+            aliases: ["caddy"],
+            embeddedLangs: ["css", "javascript", "json", "xml"],
+          },
+          "css",
+          "javascript",
+          "json",
+          "xml",
+        ],
+      },
+    }),
     postprocess: {
       includeProcessedMarkdown: true,
     },

@@ -14,18 +14,18 @@ Remux is packaged as a Docker container. If you haven't already, [install Docker
 
 First (from your desired root folder) create the directory for Remux:
 
-```bash
+```bash title="Terminal"
 mkdir remux
 cd remux
 ```
 
-Choose the configuration that matches how you want to access Remux.
+Choose the configuration (for the `docker-compose.yml` file) that matches how you want to access Remux.
 
 ### Option A: With the Caddy reverse proxy
 
 Use this configuration if you completed the Caddy setup guide. Remux is available to Caddy through the shared Docker network and port `3000` is not published on the host.
 
-```yaml
+```yaml title="docker-compose.yml" lineNumbers
 services:
   remux:
     image: ghcr.io/lostb1t/remux:nightly
@@ -53,7 +53,7 @@ networks:
 
 Use this configuration for direct access to Remux. It publishes Remux on port `3000` and does not require the external Caddy network.
 
-```yaml
+```yaml title="docker-compose.yml" lineNumbers
 services:
   remux:
     image: ghcr.io/lostb1t/remux:nightly
@@ -89,7 +89,7 @@ services:
 
 Pull the container image and start the service:
 
-```bash
+```bash title="Terminal"
 docker compose up -d
 ```
 
@@ -188,7 +188,7 @@ You should see search results from AIOStreams and playback should work.
 
 ## Useful Commands
 
-```bash
+```bash title="Terminal"
 # View logs
 docker logs remux
 
