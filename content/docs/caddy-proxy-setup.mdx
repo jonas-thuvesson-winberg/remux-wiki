@@ -84,7 +84,7 @@ If the server is behind a router, forward TCP ports `80` and `443`, plus UDP por
 
 Create a file named `Caddyfile` inside the `conf` directory. Replace `remux.my-domain.duckdns.org` with the domain pointing to your server.
 
-```caddyfile title="Caddyfile"
+```caddyfile title="Caddyfile" lineNumbers
 remux.my-domain.duckdns.org {
   reverse_proxy remux:3000
 }
