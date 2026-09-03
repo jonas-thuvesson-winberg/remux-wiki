@@ -7,7 +7,7 @@ import {
   useTOCItems,
 } from "fumadocs-ui/components/toc";
 import { ChevronDown, Text } from "lucide-react";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 function itemIndent(depth: number) {
   if (depth <= 2) return 16;
@@ -57,8 +57,7 @@ export function StraightTocMobile() {
     (last, item, index) => (item.active ? index : last),
     -1,
   );
-  const progress =
-    (lastActiveIndex + 1) / Math.max(1, trackedItems.length);
+  const progress = (lastActiveIndex + 1) / Math.max(1, trackedItems.length);
 
   if (items.length === 0) return null;
 
@@ -139,16 +138,72 @@ function ProgressCircle({ value }: { value: number }) {
 
 function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
   const items = useTOCItems();
+  const trackedItems = useItems();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({
+    top: 0,
+    height: 0,
+    visible: false,
+  });
+  const firstActiveIndex = trackedItems.findIndex((item) => item.active);
+  const lastActiveIndex = trackedItems.reduce(
+    (last, item, index) => (item.active ? index : last),
+    -1,
+  );
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateIndicator = () => {
+      if (firstActiveIndex === -1 || lastActiveIndex === -1) {
+        setIndicator((current) => ({ ...current, visible: false }));
+        return;
+      }
+
+      const first = container.querySelector<HTMLElement>(
+        `[data-toc-index="${firstActiveIndex}"]`,
+      );
+      const last = container.querySelector<HTMLElement>(
+        `[data-toc-index="${lastActiveIndex}"]`,
+      );
+      if (!first || !last) return;
+
+      const top = first.offsetTop;
+      const bottom = last.offsetTop + last.offsetHeight;
+      const height = bottom - top;
+      setIndicator({ top, height, visible: true });
+    };
+
+    const observer = new ResizeObserver(updateIndicator);
+    observer.observe(container);
+    updateIndicator();
+
+    return () => observer.disconnect();
+  }, [firstActiveIndex, lastActiveIndex]);
 
   return (
-    <div className="relative mt-3 flex flex-col border-s border-fd-foreground/10">
-      {items.map((item) => (
+    <div
+      ref={containerRef}
+      className="relative mt-3 flex flex-col border-s border-fd-foreground/10"
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-s-px top-0 w-px bg-fd-primary transition-[transform,height,opacity] duration-300 ease-out motion-reduce:transition-none"
+        style={{
+          height: indicator.height,
+          opacity: indicator.visible ? 1 : 0,
+          transform: `translateY(${indicator.top}px)`,
+        }}
+      />
+      {items.map((item, index) => (
         <TOCItem
           key={item.url}
           href={item.url}
           onClick={onSelect}
+          data-toc-index={index}
           style={{ paddingInlineStart: itemIndent(item.depth) }}
-          className="relative py-1.5 pe-2 text-sm text-fd-muted-foreground transition-colors before:absolute before:-inset-s-px before:inset-y-0 before:w-px before:bg-transparent before:content-[''] hover:text-fd-foreground data-[active=true]:text-fd-primary data-[active=true]:before:bg-fd-primary"
+          className="relative py-1.5 pe-2 text-sm text-fd-muted-foreground transition-colors hover:text-fd-foreground data-[active=true]:text-fd-primary"
         >
           {item.title}
         </TOCItem>
