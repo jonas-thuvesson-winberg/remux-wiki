@@ -154,6 +154,7 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
   useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    let animationFrame: number | undefined;
 
     const updateIndicator = () => {
       if (firstActiveIndex === -1 || lastActiveIndex === -1) {
@@ -175,11 +176,25 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
       setIndicator({ top, height, visible: true });
     };
 
-    const observer = new ResizeObserver(updateIndicator);
-    observer.observe(container);
-    updateIndicator();
+    // Coalesce rapid updates into a single calculation per animation frame,
+    // to avoid stuttering/flickering.
+    const scheduleUpdate = () => {
+      if (animationFrame !== undefined) {
+        cancelAnimationFrame(animationFrame);
+      }
+      animationFrame = requestAnimationFrame(updateIndicator);
+    };
 
-    return () => observer.disconnect();
+    const observer = new ResizeObserver(scheduleUpdate);
+    observer.observe(container);
+    scheduleUpdate();
+
+    return () => {
+      observer.disconnect();
+      if (animationFrame !== undefined) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
   }, [firstActiveIndex, lastActiveIndex]);
 
   return (
