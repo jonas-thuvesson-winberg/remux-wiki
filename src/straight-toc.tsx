@@ -142,7 +142,7 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState({
     top: 0,
-    height: 0,
+    bottom: 0,
     visible: false,
   });
   const firstActiveIndex = trackedItems.findIndex((item) => item.active);
@@ -154,7 +154,6 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
   useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    let animationFrame: number | undefined;
 
     const updateIndicator = () => {
       if (firstActiveIndex === -1 || lastActiveIndex === -1) {
@@ -171,30 +170,16 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
       if (!first || !last) return;
 
       const top = first.offsetTop;
-      const bottom = last.offsetTop + last.offsetHeight;
-      const height = bottom - top;
-      setIndicator({ top, height, visible: true });
+      const lastBottom = last.offsetTop + last.offsetHeight;
+      const bottom = container.offsetHeight - lastBottom;
+      setIndicator({ top, bottom, visible: true });
     };
 
-    // Coalesce rapid updates into a single calculation per animation frame,
-    // to avoid stuttering/flickering.
-    const scheduleUpdate = () => {
-      if (animationFrame !== undefined) {
-        cancelAnimationFrame(animationFrame);
-      }
-      animationFrame = requestAnimationFrame(updateIndicator);
-    };
-
-    const observer = new ResizeObserver(scheduleUpdate);
+    const observer = new ResizeObserver(updateIndicator);
     observer.observe(container);
-    scheduleUpdate();
+    updateIndicator();
 
-    return () => {
-      observer.disconnect();
-      if (animationFrame !== undefined) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
+    return () => observer.disconnect();
   }, [firstActiveIndex, lastActiveIndex]);
 
   return (
@@ -204,11 +189,13 @@ function StraightTocItems({ onSelect }: { onSelect?: () => void }) {
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-s-px top-0 w-px bg-fd-primary transition-[transform,height,opacity] duration-300 ease-out motion-reduce:transition-none"
+        className="pointer-events-none absolute -inset-s-px w-px bg-fd-primary transition-[top,bottom,opacity] duration-250 ease-out motion-reduce:transition-none"
         style={{
-          height: indicator.height,
+          top: indicator.top,
+          bottom: indicator.bottom,
           opacity: indicator.visible ? 1 : 0,
-          transform: `translateY(${indicator.top}px)`,
+          width: "2px",
+          borderRadius: "0 4px 4px 0",
         }}
       />
       {items.map((item, index) => (
