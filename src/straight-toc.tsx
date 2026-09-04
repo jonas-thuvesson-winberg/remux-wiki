@@ -3,11 +3,12 @@
 import { TOCItem } from "fumadocs-core/toc";
 import {
   TOCScrollArea,
+  useActiveAnchor,
   useItems,
   useTOCItems,
 } from "fumadocs-ui/components/toc";
 import { ChevronDown, Text } from "lucide-react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 function itemIndent(depth: number) {
   if (depth <= 2) return 16;
@@ -17,6 +18,15 @@ function itemIndent(depth: number) {
 
 export function StraightToc() {
   const items = useTOCItems();
+  const activeAnchor = useActiveAnchor();
+
+  useEffect(() => {
+    if (!activeAnchor || window.location.hash === `#${activeAnchor}`) return;
+
+    const url = new URL(window.location.href);
+    url.hash = activeAnchor;
+    window.history.replaceState(window.history.state, "", url);
+  }, [activeAnchor]);
 
   if (items.length === 0) {
     return (
